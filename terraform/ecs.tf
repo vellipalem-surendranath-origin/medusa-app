@@ -5,6 +5,7 @@ resource "aws_ecs_cluster" "medusa_cluster" {
 resource "aws_ecs_task_definition" "medusa_task" {
   family                = "medusa-task"
   network_mode          = "awsvpc"
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   requires_compatibilities = ["FARGATE"]
   cpu                   = "512"
   memory                = "1024"
