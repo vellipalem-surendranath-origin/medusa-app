@@ -13,7 +13,7 @@ resource "aws_ecs_task_definition" "medusa_task" {
   container_definitions = jsonencode([
     {
       name  = "medusa",
-      image = "medusajs/medusa:latest",
+      image = "jmflaherty/medusajs-backend:latest",
       essential = true,
       portMappings = [
         {
