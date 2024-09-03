@@ -12,11 +12,11 @@ terraform {
 }
 
 module "vpc" {
-  source = "./vpc"
+  source = "./terraform/vpc"
 }
 
 module "ecs" {
-  source = "./ecs"
+  source = "./terraform/ecs"
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.subnet_ids
 }
