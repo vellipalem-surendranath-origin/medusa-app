@@ -3,7 +3,11 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "subnet_ids" {
-  description = "List of subnet IDs where ECS services will be deployed"
-  type        = list(string)
+# Variables for DB credentials
+variable "db_username" {
+  type = string
+}
+
+variable "db_password" {
+  type = string
 }
