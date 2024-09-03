@@ -28,7 +28,29 @@ resource "aws_ecs_task_definition" "medusa_task" {
           "awslogs-region"        = "us-east-1"
           "awslogs-stream-prefix" = "medusa"
         }
-      }
+      },
+      environment = [
+        {
+          name  = "DB_HOST"
+          value = aws_db_instance.medusa_db.address
+        },
+        {
+          name  = "DB_PORT"
+          value = tostring(aws_db_instance.medusa_db.port)
+        },
+        {
+          name  = "DB_NAME"
+          value = aws_db_instance.medusa_db.name
+        },
+        {
+          name  = "DB_USER"
+          value = var.db_username
+        },
+        {
+          name  = "DB_PASSWORD"
+          value = var.db_password
+        }
+      ]
     }
   ])
 }
