@@ -71,6 +71,6 @@ resource "aws_security_group_rule" "allow_alb" {
   security_group_id = aws_security_group.ecs_sg.id
 
   # Reference ALB security groups
-  # source_security_group_id = aws_lb.medusa_alb.security_groups[0]
-  source_security_group_id = aws_lb.medusa_alb.security_groups[count.index]
+  source_security_group_id = aws_lb.medusa_alb.security_groups[0]
+  # source_security_group_id = aws_lb.medusa_alb.security_groups[count.index]
 }
