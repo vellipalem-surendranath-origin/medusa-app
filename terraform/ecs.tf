@@ -53,7 +53,7 @@ resource "aws_security_group" "ecs_sg" {
     from_port   = 9000
     to_port     = 9000
     protocol    = "tcp"
-    security_groups = [aws_lb.medusa_alb.security_group] # Allow traffic from ALB
+    security_groups = [aws_lb.medusa_alb.security_groups[0]]  # Allow traffic from the ALB
   }
 
   egress {
