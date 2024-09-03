@@ -37,7 +37,7 @@ resource "aws_db_instance" "medusa_db" {
   name                 = "medusa"
   username             = var.db_username
   password             = var.db_password
-  parameter_group_name = "default.postgres12"
+  parameter_group_name = "default.postgres16"
   publicly_accessible  = false  # Set to false for security
   skip_final_snapshot  = true
 
