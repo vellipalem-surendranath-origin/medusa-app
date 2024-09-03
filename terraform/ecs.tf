@@ -47,7 +47,7 @@ resource "aws_ecs_service" "medusa_service" {
 
 resource "aws_security_group" "ecs_sg" {
   name_prefix = "ecs-sg"
-  vpc_id      = output.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   ingress {
     from_port   = 9000
