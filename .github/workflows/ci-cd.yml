@@ -30,12 +30,12 @@ jobs:
       - name: Create S3 Bucket for Terraform State
         run: |
           aws s3api create-bucket \
-            --bucket my-terraform-state-bucket \
+            --bucket medusa-terraform-state-bucket \
             --region us-east-1
 
           # Enable versioning on the S3 bucket
           aws s3api put-bucket-versioning \
-            --bucket my-terraform-state-bucket \
+            --bucket medusa-terraform-state-bucket \
             --versioning-configuration Status=Enabled
 
       - name: Create DynamoDB Table for State Locking
@@ -51,7 +51,7 @@ jobs:
         run: |
           echo "Checking if S3 bucket and DynamoDB table exist..."
 
-          aws s3api head-bucket --bucket my-terraform-state-bucket
+          aws s3api head-bucket --bucket medusa-terraform-state-bucket
 
           aws dynamodb describe-table --table-name terraform-lock-table
 
