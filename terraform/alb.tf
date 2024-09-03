@@ -9,7 +9,7 @@ resource "aws_lb_target_group" "medusa_tg" {
   name        = "medusa-tg"
   port        = 9000
   protocol    = "HTTP"
-  vpc_id      = output.vpc_id
+  vpc_id      = module.vpc.vpc_id
   target_type = "ip"  # Fargate requires "ip" as target type
 }
 resource "aws_lb_listener" "http_listener" {
