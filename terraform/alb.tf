@@ -3,10 +3,11 @@ resource "aws_security_group" "alb_sg" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 0
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    self        = true
   }
 
   egress {
