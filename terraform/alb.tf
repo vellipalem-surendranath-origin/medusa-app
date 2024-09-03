@@ -1,8 +1,27 @@
+resource "aws_security_group" "alb_sg" {
+  name_prefix = "alb-sg"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_lb" "medusa_alb" {
   name               = "medusa-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.ecs_sg.id]
+  security_groups    = [aws_security_group.alb_sg.id]  # Use the ALB security group ID
   subnets            = module.vpc.public_subnets  # Use public subnets
 }
 resource "aws_lb_target_group" "medusa_tg" {
