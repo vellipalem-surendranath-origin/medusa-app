@@ -44,7 +44,6 @@ resource "aws_ecs_service" "medusa_service" {
   depends_on = [aws_lb_listener.http_listener]
 }
 
-
 resource "aws_security_group" "ecs_sg" {
   name_prefix = "ecs-sg"
   vpc_id      = module.vpc.vpc_id
@@ -53,7 +52,7 @@ resource "aws_security_group" "ecs_sg" {
     from_port   = 9000
     to_port     = 9000
     protocol    = "tcp"
-    security_groups = [aws_lb.medusa_alb.security_groups]  # Allow traffic from the ALB
+    cidr_blocks = ["0.0.0.0/0"]  # Temporarily allow all IPs for testing
   }
 
   egress {
@@ -62,4 +61,16 @@ resource "aws_security_group" "ecs_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+resource "aws_security_group_rule" "allow_alb" {
+  type        = "ingress"
+  from_port   = 9000
+  to_port     = 9000
+  protocol    = "tcp"
+  security_group_id = aws_security_group.ecs_sg.id
+
+  # Reference ALB security groups
+  # source_security_group_id = aws_lb.medusa_alb.security_groups[0]
+  source_security_group_id = aws_lb.medusa_alb.security_groups[count.index]
 }
