@@ -31,10 +31,19 @@ resource "aws_ecs_service" "medusa_service" {
   desired_count   = 1
 
   network_configuration {
-    subnets         = var.subnet_ids
+    subnets         = module.vpc.private_subnets  # Use private subnets if behind ALB
     security_groups = [aws_security_group.ecs_sg.id]
   }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.medusa_tg.arn
+    container_name   = "medusa"
+    container_port   = 9000
+  }
+
+  depends_on = [aws_lb_listener.http_listener]
 }
+
 
 resource "aws_security_group" "ecs_sg" {
   name_prefix = "ecs-sg"
@@ -44,7 +53,7 @@ resource "aws_security_group" "ecs_sg" {
     from_port   = 9000
     to_port     = 9000
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    source_security_group_id = aws_lb.medusa_alb.id  # Allow traffic from ALB
   }
 
   egress {
