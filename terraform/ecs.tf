@@ -19,6 +19,7 @@ resource "aws_ecs_task_definition" "medusa_task" {
         {
           containerPort = 9000
           hostPort      = 9000
+          protocal      = "tcp"
         }
       ],
       logConfiguration = {
@@ -60,6 +61,8 @@ resource "aws_ecs_service" "medusa_service" {
   cluster         = aws_ecs_cluster.medusa_cluster.id
   task_definition = aws_ecs_task_definition.medusa_task.arn
   desired_count   = 1
+  launch_type     = "FARGATE"
+  force_new_deployment  = true
 
   network_configuration {
     subnets         = module.vpc.private_subnets  # Use private subnets if behind ALB
@@ -80,10 +83,11 @@ resource "aws_security_group" "ecs_sg" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    from_port   = 9000
-    to_port     = 9000
+    from_port   = 0
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]  # Temporarily allow all IPs for testing
+    self        = true
   }
 
   egress {
