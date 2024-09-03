@@ -19,7 +19,15 @@ resource "aws_ecs_task_definition" "medusa_task" {
           containerPort = 9000
           hostPort      = 9000
         }
-      ]
+      ],
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.medusa_logs.name
+          "awslogs-region"        = "us-east-1"
+          "awslogs-stream-prefix" = "medusa"
+        }
+      }
     }
   ])
 }
