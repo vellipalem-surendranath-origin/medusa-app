@@ -10,8 +10,3 @@ terraform {
     }
   }
 }
-
-module "vpc" {
-  source = "./terraform/vpc"
-}
-
