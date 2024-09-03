@@ -15,3 +15,11 @@ output "ecs_service_name" {
 output "alb_dns_name" {
   value = aws_lb.medusa_alb.dns_name
 }
+
+output "db_name" {
+  value = aws_db_instance.medusa_db.name
+}
+
+output "db_port" {
+  value = aws_db_instance.medusa_db.port
+}
