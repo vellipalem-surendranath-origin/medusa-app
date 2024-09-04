@@ -33,15 +33,15 @@ resource "aws_ecs_task_definition" "medusa_task" {
       environment = [
         {
           name  = "DB_HOST"
-          value = aws_db_instance.medusa_db.address
+          value = "terraform-20240903222803921600000001.cvm8820swaan.us-east-1.rds.amazonaws.com"
         },
         {
           name  = "DB_PORT"
-          value = tostring(aws_db_instance.medusa_db.port)
+          value = "5432"
         },
         {
           name  = "DB_NAME"
-          value = aws_db_instance.medusa_db.name
+          value = "terraform-20240903222803921600000001"
         },
         {
           name  = "DB_USER"
