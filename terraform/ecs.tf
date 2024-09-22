@@ -12,16 +12,18 @@ resource "aws_ecs_task_definition" "medusa_task" {
 
   container_definitions = jsonencode([
     {
-      name  = "medusa",
-      image = "jmflaherty/medusajs-backend:latest",
-      essential = true,
+      name  = "medusa"
+      image = "anudeep1/medusa_app:latest"
+      essential = true
+      cpu       = 256
+      memory    = 512
       portMappings = [
         {
           containerPort = 9000
           hostPort      = 9000
           protocal      = "tcp"
         }
-      ],
+      ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -29,28 +31,16 @@ resource "aws_ecs_task_definition" "medusa_task" {
           "awslogs-region"        = "us-east-1"
           "awslogs-stream-prefix" = "medusa"
         }
-      },
+      }
       environment = [
-        {
-          name  = "DB_HOST"
-          value = "terraform-20240903222803921600000001.cvm8820swaan.us-east-1.rds.amazonaws.com"
-        },
-        {
-          name  = "DB_PORT"
-          value = "5432"
-        },
-        {
-          name  = "DB_NAME"
-          value = "terraform-20240903222803921600000001"
-        },
-        {
-          name  = "DB_USER"
-          value = var.db_username
-        },
-        {
-          name  = "DB_PASSWORD"
-          value = var.db_password
-        }
+      # PostgreSQL connection settings
+      { name = "POSTGRES_HOST", value = aws_db_instance.medusa_db.address },
+      { name = "POSTGRES_USER", value = aws_db_instance.medusa_db.username },
+      { name = "POSTGRES_PASSWORD", value = aws_db_instance.medusa_db.password },
+      { name = "POSTGRES_DB", value = "medusa" },
+      
+      # Redis connection settings
+      { name = "REDIS_URL", value = "redis://${aws_elasticache_cluster.redis.cache_nodes.0.address}:6379" }
       ]
     }
   ])
