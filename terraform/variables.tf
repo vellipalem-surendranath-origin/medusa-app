@@ -11,3 +11,7 @@ variable "db_username" {
 variable "db_password" {
   type = string
 }
+
+variable "subnet_id" {}
+
+variable "vpc_id" {}
