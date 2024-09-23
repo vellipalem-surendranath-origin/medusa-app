@@ -27,48 +27,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Adjust region as needed
 
-      - name: Create S3 Bucket for Terraform State
-        run: |
-          aws s3api create-bucket \
-            --bucket medusa-terraform-state-bucket \
-            --region us-east-1
-
-          # Enable versioning on the S3 bucket
-          aws s3api put-bucket-versioning \
-            --bucket medusa-terraform-state-bucket \
-            --versioning-configuration Status=Enabled
-
-      - name: Check and Create DynamoDB Table for Terraform Lock
-        run: |
-          TABLE_NAME="terraform-lock-table"
-          aws dynamodb create-table \
-              --table-name $TABLE_NAME \
-              --attribute-definitions AttributeName=LockID,AttributeType=S \
-              --key-schema AttributeName=LockID,KeyType=HASH \
-              --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
-              --region us-east-1
-          # TABLE_EXISTS=$(aws dynamodb list-tables --region us-east-1 --query "TableNames" --output text | grep -w $TABLE_NAME)
-
-          # if [ -z "$TABLE_EXISTS" ]; then
-          #   echo "Table does not exist. Creating the table..."
-          #   aws dynamodb create-table \
-          #     --table-name $TABLE_NAME \
-          #     --attribute-definitions AttributeName=LockID,AttributeType=S \
-          #     --key-schema AttributeName=LockID,KeyType=HASH \
-          #     --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
-          #     --region us-east-1
-          # else
-          #   echo "Table already exists. Skipping creation."
-          # fi
-
-      - name: Verify S3 Bucket and DynamoDB Table Creation
-        run: |
-          echo "Checking if S3 bucket and DynamoDB table exist..."
-
-          aws s3api head-bucket --bucket medusa-terraform-state-bucket
-
-          aws dynamodb describe-table --table-name terraform-lock-table
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
