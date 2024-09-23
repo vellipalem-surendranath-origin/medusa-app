@@ -1,14 +1,63 @@
-module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-  version = "3.14.0"
+data "aws_vpc" "main" {
+  id = var.vpc_id
+}
 
-  name = "medusa-vpc"
-  cidr = "10.0.0.0/16"
+data "aws_subnet" "main" {
+  id = var.subnet_id
+}
 
-  azs             = ["us-east-1a", "us-east-1b"]
-  public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
-  private_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.main.id
+}
 
-  enable_nat_gateway = true
-  single_nat_gateway = true
+resource "aws_route_table" "routetable" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.gw.id
+  }
+}
+
+# Security Group for ECS
+resource "aws_security_group" "medusa_sg" {
+  name        = "ecs-security-group"
+  description = "Allow SSH and HTTP"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # SSH access (be cautious)
+  }
+
+  ingress {
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Medusa backend port
+  }
+
+    # Allow HTTP traffic
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow HTTP access from anywhere
+  }
+
+  # Allow HTTPS traffic
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow HTTPS access from anywhere
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
