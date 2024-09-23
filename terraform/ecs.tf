@@ -55,7 +55,7 @@ resource "aws_ecs_service" "medusa_service" {
   force_new_deployment  = true
 
   network_configuration {
-    subnets         = data.aws_subnet.main.id
+    subnets         = [data.aws_subnet.main.id]
     security_groups = [aws_security_group.medusa_sg.id]
     assign_public_ip = true
   }
