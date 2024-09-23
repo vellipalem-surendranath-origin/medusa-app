@@ -1,6 +1,6 @@
 resource "aws_elasticache_subnet_group" "redis_subnet_group" {
   name       = "redis-subnet-group"
-  subnet_ids = [data.aws_subnet.main.id]
+  subnet_ids = ["subnet-0c9b473d9397d8d61"]
 }
 
 resource "aws_elasticache_cluster" "redis" {
