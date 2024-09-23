@@ -28,7 +28,7 @@ resource "aws_ecs_task_definition" "medusa_task" {
         logDriver = "awslogs"
         options = {
           "awslogs-group"         = aws_cloudwatch_log_group.medusa_logs.name
-          "awslogs-region"        = "us-east-1"
+          "awslogs-region"        = var.aws_region
           "awslogs-stream-prefix" = "medusa"
         }
       }
