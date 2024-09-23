@@ -13,7 +13,7 @@ terraform {
 
 terraform {
   backend "s3" {
-    bucket         = "medusa-terraform-state-bucket"
+    bucket         = "medusa-terraform-state-bucket-new"
     key            = "medusa-ecs-terraform.tfstate"
     region         = "ap-south-1"
     dynamodb_table = "terraform-lock-table"
