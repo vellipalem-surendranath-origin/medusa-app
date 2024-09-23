@@ -7,11 +7,11 @@ data "aws_subnet" "main" {
 }
 
 resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.aws_vpc.main.id
 }
 
 resource "aws_route_table" "routetable" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = data.aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.gw.id
@@ -22,7 +22,7 @@ resource "aws_route_table" "routetable" {
 resource "aws_security_group" "medusa_sg" {
   name        = "ecs-security-group"
   description = "Allow SSH and HTTP"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = data.aws_vpc.main.id
 
   ingress {
     from_port   = 22
