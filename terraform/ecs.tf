@@ -40,7 +40,7 @@ resource "aws_ecs_task_definition" "medusa_task" {
       { name = "POSTGRES_DB", value = "medusa" },
       
       # Redis connection settings
-      { name = "REDIS_URL", value = "redis://${aws_elasticache_replication_group.default.primary_endpoint_address}:6379" }
+      { name = "REDIS_URL", value = "redis://${aws_elasticache_cluster.medusa.cache_nodes[0].address}:6379" }
       ]
     }
   ])
