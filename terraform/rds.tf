@@ -10,5 +10,8 @@ resource "aws_db_instance" "medusa_db" {
   publicly_accessible  = true
   vpc_security_group_ids = [aws_security_group.medusa_sg.id]
   db_subnet_group_name = aws_elasticache_subnet_group.redis_subnet_group.name
+  depends_on = [
+    aws_elasticache_subnet_group.redis_subnet_group
+  ]
 }
 
