@@ -1,11 +1,12 @@
+# Reference existing VPC
 data "aws_vpc" "main" {
-  id = var.vpc_id
+  id = "vpc-0e77cbe60dfd345dd"
 }
 
+# Reference existing Subnet
 data "aws_subnet" "main" {
-  id = var.subnet_id
+  id = "subnet-0c9b473d9397d8d61"
 }
-
 resource "aws_internet_gateway" "gw" {
   vpc_id = data.aws_vpc.main.id
 }
