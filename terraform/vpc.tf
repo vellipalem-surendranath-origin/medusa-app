@@ -7,15 +7,19 @@ data "aws_vpc" "main" {
 data "aws_subnet" "main" {
   id = "subnet-0c9b473d9397d8d61"
 }
-resource "aws_internet_gateway" "gw" {
-  vpc_id = data.aws_vpc.main.id
+
+data "aws_internet_gateway" "main" {
+  filter {
+    name   = "attachment.vpc-id"
+    values = [data.aws_vpc.main.id]
+  }
 }
 
 resource "aws_route_table" "routetable" {
   vpc_id = data.aws_vpc.main.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
+    gateway_id = data.aws_internet_gateway.main.id
   }
 }
 
