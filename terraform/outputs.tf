@@ -7,5 +7,5 @@ output "postgres_endpoint" {
 }
 
 output "redis_endpoint" {
-  value = aws_elasticache_replication_group.default.primary_endpoint_address
+  value = aws_elasticache_cluster.medusa.primary_endpoint_address
 }
