@@ -11,4 +11,7 @@ resource "aws_elasticache_cluster" "redis" {
   parameter_group_name = "default.redis5.0"
   subnet_group_name    = aws_elasticache_subnet_group.redis_subnet_group.name
   security_group_ids   = [aws_security_group.medusa_sg.id]
+ depends_on = [
+    aws_elasticache_subnet_group.redis_subnet_group
+  ]
 }
