@@ -7,8 +7,8 @@ resource "aws_ecs_task_definition" "medusa_task" {
   network_mode          = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   requires_compatibilities = ["FARGATE"]
-  cpu                   = "512"
-  memory                = "1024"
+  cpu                   = "256"
+  memory                = "512"
 
   container_definitions = jsonencode([
     {
@@ -55,47 +55,8 @@ resource "aws_ecs_service" "medusa_service" {
   force_new_deployment  = true
 
   network_configuration {
-    subnets         = module.vpc.private_subnets  # Use private subnets if behind ALB
-    security_groups = [aws_security_group.ecs_sg.id]
+    subnets         = data.aws_subnet.main.id
+    security_groups = [aws_security_group.medusa_sg.id]
+    assign_public_ip = true
   }
-
-  load_balancer {
-    target_group_arn = aws_lb_target_group.medusa_tg.arn
-    container_name   = "medusa"
-    container_port   = 9000
-  }
-
-  depends_on = [aws_lb_listener.http_listener]
-}
-
-resource "aws_security_group" "ecs_sg" {
-  name_prefix = "ecs-sg"
-  vpc_id      = module.vpc.vpc_id
-
-  ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Temporarily allow all IPs for testing
-    self        = true
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-resource "aws_security_group_rule" "allow_alb" {
-  type        = "ingress"
-  from_port   = 9000
-  to_port     = 9000
-  protocol    = "tcp"
-  security_group_id = aws_security_group.ecs_sg.id
-
-  # Reference ALB security groups
-  source_security_group_id = tolist(aws_lb.medusa_alb.security_groups)[0]
-  # source_security_group_id = aws_lb.medusa_alb.security_groups[count.index]
 }
