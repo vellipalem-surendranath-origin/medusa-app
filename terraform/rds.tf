@@ -21,7 +21,7 @@ resource "aws_security_group" "redis_sg" {
 
 resource "aws_db_subnet_group" "db_subnet" {
   name       = "medusa-db-subnet-group"
-  subnet_ids = ["subnet-0c9b473d9397d8d61"]
+  subnet_ids = ["subnet-0c9b473d9397d8d61","subnet-0de0da3c4f069e929","subnet-01e20ef74422cd971"]
   description = "Subnet group for Medusa PostgreSQL RDS"
 }
 
