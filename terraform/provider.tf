@@ -1,5 +1,5 @@
 provider "aws" {
-  region = var.aws_region
+  region = "ap-south-1"
 }
 
 terraform {
@@ -15,7 +15,7 @@ terraform {
   backend "s3" {
     bucket         = "medusa-terraform-state-bucket"
     key            = "medusa-ecs-terraform.tfstate"
-    region         = var.aws_region
+    region         = "ap-south-1"
     dynamodb_table = "terraform-lock-table"
     encrypt        = true
   }
