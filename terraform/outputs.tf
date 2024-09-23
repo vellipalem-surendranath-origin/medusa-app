@@ -1,25 +1,11 @@
-output "vpc_id" {
-  description = "The ID of the VPC"
-  value       = module.vpc.vpc_id
+output "medusa_service_url" {
+  value = aws_ecs_service.medusa_service.name
 }
 
-output "ecs_cluster_id" {
-  description = "The ID of the ECS cluster"
-  value       = aws_ecs_cluster.medusa_cluster.id
+output "postgres_endpoint" {
+  value = aws_db_instance.medusa_db.endpoint
 }
 
-output "ecs_service_name" {
-  description = "The name of the ECS service"
-  value       = aws_ecs_service.medusa_service.name
-}
-output "alb_dns_name" {
-  value = aws_lb.medusa_alb.dns_name
-}
-
-output "db_name" {
-  value = aws_db_instance.medusa_db.name
-}
-
-output "db_port" {
-  value = aws_db_instance.medusa_db.port
+output "redis_endpoint" {
+  value = aws_elasticache_cluster.redis.cache_nodes.0.address
 }
